@@ -81,5 +81,33 @@
         <a href="/api/waitlist">API Wait List</a>
       </footer>
     </div>
+
+    <script>
+      $(".submit").on("click", function (event) {
+        event.preventDefault();
+        var newReserve = {
+          name: $("#reserve-name").val().trim(),
+          phone: $("#reserve-phone").val().trim(),
+          email: $("#reserve-email").val().trim(),
+          id: $("#reserve-unique-id").val().trim(),
+        };
+
+        $.post("/api/tables", newReserve).then(function (data) {
+          if (data === true) {
+            alert("Yay! You are officially booked!");
+            $("#reserve-name").val("");
+            $("#reserve-phone").val("");
+            $("#reserve-email").val("");
+            $("#reserve-unique-id").val("");
+          } else {
+            alert("Sorry, you are on the wait list :-(");
+            $("#reserve-name").val("");
+            $("#reserve-phone").val("");
+            $("#reserve-email").val("");
+            $("#reserve-unique-id").val("");
+          }
+        });
+      });
+    </script>
   </body>
 </html>

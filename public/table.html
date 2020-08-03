@@ -39,45 +39,71 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card m-2">
         <h2 class="card-header">
           Current Reservations
         </h2>
-        <div class="card-body">
-          <ul id="tableList" class="list-group">
-            <li class="list-group-item mt-4">
-              <h2>Table #1</h2>
-              <hr />
-              <h2>ID: afhaque89</h2>
-              <h2>Name: Ahmed</h2>
-              <h2>Email: ahmed@example.com</h2>
-              <h2>Phone: 000-000-0000</h2>
-            </li>
-          </ul>
-        </div>
+        <div class="card-body" id="tableList"></div>
       </div>
 
-      <div class="card">
+      <div class="card m-2">
         <h2 class="card-header">
           Waiting List
         </h2>
-        <div class="card-body">
-          <ul id="tableList" class="list-group">
-            <li class="list-group-item mt-4">
-              <h2>Table #1</h2>
-              <hr />
-              <h2>ID: afhaque89</h2>
-              <h2>Name: Ahmed</h2>
-              <h2>Email: ahmed@example.com</h2>
-              <h2>Phone: 000-000-0000</h2>
-            </li>
-          </ul>
-        </div>
+        <div class="card-body" id="waitList"></div>
       </div>
       <footer>
+        <a href="/api/tables" id="clear">Clear Table</a> |
         <a href="/api/tables">API Table Link</a> |
         <a href="/api/waitlist">API Wait List</a>
       </footer>
     </div>
+
+    <script>
+      function render() {
+        console.log("'''''連打あー。");
+        $("#tableList").empty();
+        $("#waitList").empty();
+        $.get("api/tables", (data) => {
+          for (let i = 0; i < data.length; i++) {
+            var newTable = $(`
+            <ul class="list-group"><li class="list-group-item mt-4">
+              <h2>Table #${i + 1}</h2>
+              <hr />
+              <h2>ID: ${data[i].id}</h2>
+              <h2>Name: ${data[i].name}</h2>
+              <h2>Email: ${data[i].email}</h2>
+              <h2>Phone: ${data[i].phone}</h2>
+            </li></ul>
+          `);
+            $("#tableList").append(newTable);
+          }
+        });
+        $.get("api/waitlist", (data) => {
+          for (let i = 0; i < data.length; i++) {
+            var newWait = $(`
+            <ul class="list-group"><li class="list-group-item mt-4">
+              <h2>Table #${i + 1}</h2>
+              <hr />
+              <h2>ID: ${data[i].id}</h2>
+              <h2>Name: ${data[i].name}</h2>
+              <h2>Email: ${data[i].email}</h2>
+              <h2>Phone: ${data[i].phone}</h2>
+            </li></ul>
+          `);
+            $("#waitList").append(newWait);
+          }
+        });
+      }
+
+      $("#clear").on("click", function (event) {
+        event.preventDefault();
+        alert("Clearing...");
+        $.post("api/clear").then(() => {
+          render();
+        });
+      });
+      render();
+    </script>
   </body>
 </html>
